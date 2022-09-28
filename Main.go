@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var board [5][5]string
 var rows = len(board)
@@ -11,10 +14,10 @@ var playerOne string = "P1"
 var playerTwo string = "P2"
 
 const (
-	F = iota
-	B
-	L
-	R
+	F = "F"
+	B = "B"
+	L = "L"
+	R = "R"
 )
 
 var playerOneScore = 0
@@ -56,16 +59,44 @@ func main() {
 	fmt.Println("enter your players ,player two : ")
 	println("*****************************")
 	inputPlayerAndPlace(playerTwo)
-
+	fmt.Println("player one starts")
 	for {
-		draw()
-		var input, err = Input()
-		if err == nil {
-			updatePos()
-		}
-		fmt.Println(input)
+		fmt.Println("player one (pawn:direction): ")
+		m := input(playerOne)
+		fmt.Println(m)
 	}
+}
 
+func input(one string) int {
+	var input string
+	fmt.Scan(&input)
+	var pawn, dir = getDirectionAndPawnToMove(input)
+	prefix := "A-"
+	pawnWithPrefix := prefix + pawn
+	fmt.Println("lol", pawnWithPrefix)
+	p := playerOnePoints.pointMap[pawnWithPrefix]
+	fmt.Println("now", p)
+	switch dir {
+	case F:
+		modified := Point{
+			x: p.x,
+			y: p.y,
+		}
+		fmt.Println("here", modified)
+	case B:
+	case L:
+	case R:
+
+	}
+	return 1
+
+}
+
+func getDirectionAndPawnToMove(input string) (string, string) {
+	var pawnAndDir = strings.Split(input, ":")
+	println(pawnAndDir[0])
+	println(pawnAndDir[1])
+	return pawnAndDir[0], pawnAndDir[1]
 }
 
 func inputPlayerAndPlace(one string) {
@@ -77,6 +108,7 @@ func inputPlayerAndPlace(one string) {
 			board[columns-1][i] = teamOne[i]
 			var p Point = Point{columns - 1, i}
 			playerOnePoints.pointMap[teamOne[i]] = p
+			fmt.Println("logs", teamOne[i], playerOnePoints.pointMap[teamOne[i]])
 		} else {
 			var input string
 			fmt.Scan(&input)
@@ -90,15 +122,6 @@ func inputPlayerAndPlace(one string) {
 
 func updatePos() {
 
-}
-
-func Input() (string, error) {
-	var input string
-	_, err := fmt.Scan(&input)
-	if err != nil {
-		return "", fmt.Errorf("error is " + err.Error())
-	}
-	return input, nil
 }
 
 func initialize() {
